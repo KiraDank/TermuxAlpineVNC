@@ -89,7 +89,7 @@ echo
 function get_vnc_setup {
     printf '* downloading VNC setup...'
     vnc=${AlpineFS}/usr/local/bin/SetupVNC
-    curl curl --retry 3 -Lfo ${vnc} 'https://raw.githubusercontent.com/Vlone12536/TermuxAlpineVNC/master/SetupVNC.sh'
+    curl --retry 3 -Lfo ${vnc} 'https://raw.githubusercontent.com/Vlone12536/TermuxAlpineVNC/master/SetupVNC.sh'
     chmod +x ${vnc}
     echo
 }
