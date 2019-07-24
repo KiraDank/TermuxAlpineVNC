@@ -1,7 +1,7 @@
 # Alpine VNC
 ![xfce4](https://user-images.githubusercontent.com/46228973/61832201-0c2c0c80-ae79-11e9-8088-81365e70330c.png)
 ### Installing Alpine
-`curl https://raw.githubusercontent.com/Vlone12536/TermuxAlpineVNC/master/Alpine.sh`
+`curl -O https://raw.githubusercontent.com/Vlone12536/TermuxAlpineVNC/master/Alpine.sh`
 
 `bash Alpine.sh`
 
@@ -12,7 +12,7 @@ If you don't want to use Graphical Environment, you may just execute `apk update
 ### Installing VNC
 If you already have Alpine, then login and execute next:
 
-`curl https://raw.githubusercontent.com/Vlone12536/TermuxAlpineVNC/master/SetupVNC.sh`
+`curl -O https://raw.githubusercontent.com/Vlone12536/TermuxAlpineVNC/master/SetupVNC.sh`
 
 `sh SetupVNC --help`
 
