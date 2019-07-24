@@ -72,11 +72,11 @@ case \${1} in
         (/usr/bin/supervisord -c /etc/supervisord.conf &>/dev/null &) &
         ;;
     kill )
-        killall supervisord
+        killall supervisord &>/dev/null || echo 'not running'
         ;;
     * )
         echo '\${0} {bg|kill}'
-        echo '  * bd - run in background'
+        echo '  * bg - run in background'
         echo '  * kill - stop VNC'
         echo 'run without arguments to see log'
         ;;
