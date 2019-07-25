@@ -83,6 +83,12 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
 echo
+
+cat << EOF >> ${AlpineFS}/etc/apk/repositories
+
+http://dl-cdn.alpinelinux.org/alpine/edge/community
+# http://dl-cdn.alpinelinux.org/alpine/edge/testing
+EOF
 }
 
 
