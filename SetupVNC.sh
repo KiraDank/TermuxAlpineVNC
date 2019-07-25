@@ -10,8 +10,8 @@ case ${1} in
         CMD='/usr/bin/openbox'
         ;;
     i3* )
-        DE='i3wm i3status'
-        CMD='/usr/bin/13'
+        DE='i3wm'
+        CMD='/usr/bin/i3'
         ;;
     *)
         echo 'chose from:'
