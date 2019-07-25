@@ -10,10 +10,9 @@ function test_dir {
 
 
 function check_arch {
-    arch=$(uname -m)
-    case ${arch} in
+    ARCH=$(uname -m)
+    case ${ARCH} in
         aarch64|armhf|x86|x86_64|ppc64le|s390x|armv7 )
-            echo ${arch}
             ;;
         * )
             >&2 echo 'unfortunately you have unsupported architecture'
@@ -140,7 +139,7 @@ chmod +x ${launcher}
 
 
 function main {
-    ARCH=$(check_arch)
+    check_arch
     [ -n "${AlpineFS}" ] || AlpineFS="${PREFIX}/opt/AlpineFS"
 
     test_dir ${AlpineFS}
