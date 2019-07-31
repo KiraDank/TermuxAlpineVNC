@@ -2,10 +2,10 @@
 
 AlpineFS="${PREFIX}/opt/AlpineFS"  # place where will stored Alpine file system
 LAUNCH='alpine'  # name of command to start alpine
-
+BIN="${PREFIX}/bin"  # path to bin directory
 
 function test_dir {
-    [ -d "${1}" ] || mkdir -p "${1}"
+    [ -d "$1" ] || mkdir -p "$1"
 }
 
 
@@ -34,7 +34,7 @@ function check_dependencies {
         echo 'OK' || {
             printf 'insatlling...'
             apt -y install ${dependence} &>/dev/null || {
-                echo 'unable to install'
+                >&2 echo 'unable to install'
                 exit 1
             } && echo 'OK'
         }
@@ -45,8 +45,7 @@ function check_dependencies {
 function get_alpine {
     echo '* downloading latest stable Alpine...'
     filename=$(curl -s "http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/${ARCH}/" | \
-    grep -m 1 -o "alpine-minirootfs-[0-9.]*-${ARCH}.tar.gz" | \
-    head -n 1)
+               grep -m 1 -o "alpine-minirootfs-[0-9.]*-${ARCH}.tar.gz" | head -n 1)
 
     curl --retry 3 -LOf "http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/${ARCH}/${filename}"
 
@@ -60,7 +59,10 @@ function get_alpine {
 
 function setup_alpine {
 printf '* extracting...'
-proot --link2symlink -0 bsdtar -xpf ${filename} 2>/dev/null
+proot --link2symlink -0 bsdtar -xpf ${filename} 2>/dev/null && rm -f ${filename} || {
+    >&2 echo 'error'
+    exit 1
+}
 
 cat << EOF > ${AlpineFS}/etc/profile
 export CHARSET=UTF-8
@@ -94,7 +96,7 @@ EOF
 function get_vnc_setup {
     printf '* downloading VNC setup...'
     vnc=${AlpineFS}/usr/local/bin/SetupVNC
-    curl --retry 3 -Lfo ${vnc} 'https://raw.githubusercontent.com/Vlone12536/TermuxAlpineVNC/master/SetupVNC.sh'
+    curl --retry 3 -Lfso ${vnc} 'https://raw.githubusercontent.com/Vlone12536/TermuxAlpineVNC/master/SetupVNC.sh'
     chmod +x ${vnc}
     echo
 }
@@ -102,7 +104,7 @@ function get_vnc_setup {
 
 function create_launcher {
 [ -n "${LAUNCH}" ] || LAUNCH='alpine'
-launcher=${PREFIX}/bin/${LAUNCH}
+launcher=${BIN}/${LAUNCH}
 
 cat << EOF > ${launcher}
 #!/data/data/com.termux/files/usr/bin/env bash
@@ -128,8 +130,8 @@ cmd+=" TERM=\${TERM}"
 cmd+=" LANG=C.UTF-8"
 cmd+=" \${shell} --login"
 
-if [ -n "\${1}" ]; then
-    exec \${cmd} -c \${@}
+if [ -n "\$1" ]; then
+    exec \${cmd} -c \$@
 else
     exec \${cmd}
 fi
@@ -141,6 +143,7 @@ chmod +x ${launcher}
 function main {
     check_arch
     [ -n "${AlpineFS}" ] || AlpineFS="${PREFIX}/opt/AlpineFS"
+    [ -n "${BIN}" ] || BIN="${PREFIX}/bin"
 
     test_dir ${AlpineFS}
     cd ${AlpineFS}
@@ -164,7 +167,7 @@ function main {
 
 case "${1}" in
     uninstall|rm|del* )
-        rm -rf ${AlpineFS} ${PREFIX}/bin/${LAUNCH} &>/dev/null
+        rm -rf ${AlpineFS} ${BIN}/${LAUNCH} &>/dev/null
         echo done
         ;;
     '' )
